@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from .views import Main
 from content.views import Sub,UploadFeed
-from django.conf import settings
+from myinstagram.settings import MEDIA_ROOT,MEDIA_URL
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -29,4 +29,4 @@ urlpatterns = [
     path('',include('user.urls'))
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # media 에 이미지 파일을 올렸을때 해당 이미지를 조회할수 있게끔
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT) # media 에 이미지 파일을 올렸을때 해당 이미지를 조회할수 있게끔

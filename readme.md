@@ -1,4 +1,7 @@
 # 인스타그램 클론 프로젝트
+- pip install djangorestframework  
+- pip install django
+
 - django
     - MVT ( model , view , Template )
         - view : 데이터 처리 
@@ -33,3 +36,11 @@
 
 - 앱별로 url 을 나눠 주었음 ( include 사용 )
     -> 앞에 자동으로 앱 이름이 붙어서 content/upload 나 user/join 인줄 알았는데 앱이름 디폴트로 안붙음. 
+
+- make_password 함수를 사용해서 비밀번호 생성
+
+- 회원 가입 데이터 전송은 json 타입으로 , 타입도 명시해주었음 
+
+- 사진 업로드시 Onchange() : 뭔가 변경사항이 있을때 ( 파일명이 들어온다던지 ) 특정함수 실행가능 
+
+- ajax 로 보낼때 , 매핑된 url 과 다를경우 오류 났음. 그냥 똑같이 맞춰줌

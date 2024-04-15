@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import Join
-from .views import Login
+from .views import Join, Login, LogOut, UploadProfile
+
 urlpatterns = [
-    path('join',Join.as_view()), # join 
-    path('login',Login.as_view()) # join 
+    path('join', Join.as_view()),
+    path('login', Login.as_view()),
+    path('logout', LogOut.as_view()),
+    path('profile/upload', UploadProfile.as_view())
 ]

@@ -60,6 +60,10 @@
 </style>
 </head>
 <body>
+    {{user.email}}
+    {{user.nickname}}
+    {{user.name}}
+    {{user.profile_image}}
 <!-- <h1> body.</h1> -->
 <!-- db 데이터 보여주기
 <div>
@@ -75,12 +79,29 @@
     
 
     <input class="form-control me-2" style="width:400px" type="search" placeholder="Search" aria-label="Search">
-<div>
-    <span class="material-icons">home</span>  
-    <span class="material-icons-outlined">send</span>  
-    <span id="nav_bar_add_box" class="material-icons-outlined">add_box</span>  
-    <span class="material-icons-outlined">explore</span>  
-    <span class="material-icons-outlined">favorite_border</span>  
+<div style="display:flex"> 
+    <span class="material-icons" style="padding-right:10px">home</span>  
+    <span class="material-icons-outlined" style="padding-right:10px">send</span>  
+    <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right:10px">add_box</span>  
+    <span class="material-icons-outlined" style="padding-right:10px">explore</span>  
+    <span class="material-icons-outlined" style="padding-right:10px">favorite_border</span>  
+
+    <div class="dropdown">
+        <a class="btn-secondary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="box" style="width:27px;height:27px">
+                <img class="profile" 
+                    src="https://pbs.twimg.com/media/E9s0aFdVUAEHphb?format=jpg&name=large">
+            </div>
+        </a>
+      
+        <ul class="dropdown-menu" style="margin-left:-158px; margin-top:20px">
+          <li><a class="dropdown-item" href="#">내 프로필</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+
+        </ul>
+      </div>
+    
 </div>
 </div>
 </nav>
@@ -138,10 +159,10 @@
         
             <div style="margin-left:10px">
                 <div style="font-weight:bold">
-                dlawhks
+                {{user.nickname}}
                 </div>
                 <div style="color:gray">
-                임주한
+                {{user.name}}
                 </div>
                 
             </div>

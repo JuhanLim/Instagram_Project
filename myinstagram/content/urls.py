@@ -17,8 +17,13 @@ Including another URLconf
 
 from django.urls import path
 
-from .views import UploadFeed
+from .views import UploadFeed,Profile
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('content/upload',UploadFeed.as_view()) # 앱이름이 디폴트로 안붙기 때문에 content/ 까지 붙여줘야 정상 작동한다. 
+    path('upload',UploadFeed.as_view()), # 앱이름이 디폴트로 안붙기 때문에 content/ 까지 붙여줘야 정상 작동한다. 
+    path('profile', Profile.as_view()),
+    
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
