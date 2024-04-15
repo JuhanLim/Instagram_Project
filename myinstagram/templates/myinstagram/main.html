@@ -60,10 +60,7 @@
 </style>
 </head>
 <body>
-    {{user.email}}
-    {{user.nickname}}
-    {{user.name}}
-    {{user.profile_image}}
+
 <!-- <h1> body.</h1> -->
 <!-- db 데이터 보여주기
 <div>
@@ -75,12 +72,12 @@
 </div> <-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position:fixed;width:100%">
 <div class="container-fluid" style="justify-content: space-between; flex-wrap: nowrap; min-width: 1000px">
-    <a class="navbar-brand" href="#"><img style="height: 30px; object-fit: contain" src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png"></a>
+    <a class="navbar-brand" href="/main"><img style="height: 30px; object-fit: contain" src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png"></a>
     
 
     <input class="form-control me-2" style="width:400px" type="search" placeholder="Search" aria-label="Search">
 <div style="display:flex"> 
-    <span class="material-icons" style="padding-right:10px">home</span>  
+    <a href="/main" style="color:black"> <span class="material-icons" style="padding-right:10px"> home</span></a>  
     <span class="material-icons-outlined" style="padding-right:10px">send</span>  
     <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right:10px">add_box</span>  
     <span class="material-icons-outlined" style="padding-right:10px">explore</span>  
@@ -90,12 +87,12 @@
         <a class="btn-secondary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <div class="box" style="width:27px;height:27px">
                 <img class="profile" 
-                    src="https://pbs.twimg.com/media/E9s0aFdVUAEHphb?format=jpg&name=large">
+                    src="{% get_media_prefix %}{{user.profile_image}}">
             </div>
         </a>
       
         <ul class="dropdown-menu" style="margin-left:-158px; margin-top:20px">
-          <li><a class="dropdown-item" href="#">내 프로필</a></li>
+          <li><a class="dropdown-item" href="/profile">내 프로필</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
 
@@ -116,32 +113,44 @@
                 <div style="display: flex; flex-direction: row; align-items:center; margin: 20px "> <!-- 사진옆에 아이디 나오게하고 가운데 정렬 -->
                     <div class="box" style="width: 35px ; height: 35px" >
                         <img class="profile" 
-                            src="{{feed.profile_image}}">
+                            src="{% get_media_prefix %}{{user.profile_image}}">
                     </div>
                 
-                    <div>
-                        {{feed.user_id}}
+                    <div style="margin-left:10px;font-weight:bold;">
+                        {{feed.nickname}}
                     </div>
                 </div>
 
                 <div><img style="width:95%; max-height:400px" src = "{% get_media_prefix %}{{feed.image}}"></div>
                 <div style="margin: 0 20px ; display:flex; flex-direction:row; justify-content: space-between">
                     <div style="margin-top:10px">   <!-- 아이콘 -->
-                            <span class="material-icons">favorite_border</span>  
+                            
+                            <span id="favorite_{{feed.id}}" feed_id="{{feed.id}}" class="favorite material-icons" style ="color:red;cursor:pointer;">
+                            {% if feed.is_liked %}favorite{% else %}favorite_border{% endif %}</span>
                             <span class="material-icons-outlined">mode_comment</span>  
                             <span class="material-icons-outlined">send</span>
                     </div>          
                         <div>
-                            <span class="material-icons-outlined" style="margin-top:10px">bookmark_border</span>  
+                            <span id='bookmark_{{feed.id}}' feed_id="{{feed.id}}" class="bookmark material-icons-outlined" style="margin-top:10px">
+                            {% if feed.is_marked %}bookmark{% else %}bookmark_border{% endif %}</span>  
                         </div>
                 </div>        
                 <div style="margin: 0 20px; text-align:left ; font-size:14px"> 임주한 <b> 외 {{feed.like_count}}명 </b>이 좋아합니다 </div>
-                <div style="margin: 0 20px; text-align:left ; font-size:16px"> <b>{{feed.user_id}}</b> {{feed.content}} </div>
-                <div style="margin: 0 20px; text-align:left ; font-size:16px"> <b>asd</b> 이쁘다 </div>
-                <div style="margin: 0 20px; text-align:left ; font-size:16px"> <b>asd</b> 나도 가고 싶어 </div>
+                <div style="margin: 10px 20px; text-align:left ; font-size:16px"> <b>{{feed.nickname}}</b> {{feed.content}} </div>
+                <div id="reply_list_{{ feed.id }}">
+                    {% for reply in feed.reply_list %}
+                        <div style="margin: 0 20px;text-align: left;font-size: 14px">
+                            <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
+                    {% endfor %}
+                </div>
+                
 
-                <div style="border-top: solid 1px gray">
-                    <input type="text" class="form-control" style="box-shadow:none; border:none; outline:none;" placeholder="댓글 달기..">
+                <div style="border-top: solid 1px gray;display:flex; flex-direction:row;align-items:center;">
+                    <input id="reply_{{feed.id}}" type="text" class="form-control" style=" box-shadow:none; border:none; outline:none;" placeholder="댓글 달기..">
+                    <div feed_id={{feed.id}} class="upload_reply" style="width:50px;margin:10px 0px;color:cornflowerblue;">
+                        게시
+                    </div>
+                
                 </div>
             </div>
         </div>
@@ -154,7 +163,7 @@
         <div style="display: flex; flex-direction: row; align-items:center; margin: 20px "> <!-- 추천목록 -->
             <div class="box" style="width:70px;height:70px">
                 <img class="profile" 
-                    src="https://pbs.twimg.com/media/E9s0aFdVUAEHphb?format=jpg&name=large">
+                    src="{% get_media_prefix %}{{user.profile_image}}">
             </div>
         
             <div style="margin-left:10px">
@@ -276,7 +285,7 @@
             새 이미지 업로드
             </div>
             <div>
-                <span class="material-icons-outlined">
+                <span class="modal_close material-icons-outlined">
                     close
                     </span>
             </div>
@@ -298,7 +307,7 @@
             새 이미지 업로드
             </div>
             <div>
-                <span class="material-icons-outlined">
+                <span class="modal_close material-icons-outlined">
                     close
                     </span>
             </div>
@@ -321,6 +330,112 @@
 
 <script>
 
+$(".favorite").click(function(e){
+    let feed_id = e.target.attributes.getNamedItem('feed_id').value
+    let favorite_id = e.target.id;
+    let favorite_text = $.trim($('#'+favorite_id).html()) // favorite_border 인지 favorite 인지 설정하기 위해 안에 글자 추출
+    console.log(favorite_text)
+    if(favorite_text=='favorite'){
+        $('#'+favorite_id).html('favorite_border')
+    }
+    else{
+        $('#'+favorite_id).html('favorite')
+    }
+    $.ajax({
+        url: "/like",
+        data: {
+            feed_id:feed_id,
+            is_like : favorite_text,
+        },
+        method: "POST",
+        success: function (data) {
+            console.log("성공");
+            //location.replace('/main'); 일단 좋아요
+        },
+        error: function (request, status, error) {
+            console.log("에러");
+        },
+        complete: function () {
+            console.log("완료");
+            //location.replace("/main"); 새로고침 없이 추가되는걸로 변경
+
+        }
+    });
+});
+
+$(".bookmark").click(function (event) {
+    let feed_id = event.target.attributes.getNamedItem('feed_id').value;
+    let bookmark_id = event.target.id;
+    let bookmark_text = $.trim($('#' + bookmark_id).html());
+    if (bookmark_text == 'bookmark') {
+        $('#' + bookmark_id).html('bookmark_border');
+    } else {
+        $('#' + bookmark_id).html('bookmark');
+    }
+
+    $.ajax({
+        url: "/bookmark",
+        data: {
+            feed_id: feed_id,
+            bookmark_text: bookmark_text //is_marked 를 보내는것이 아닌 bookmark_text 를 보내야했음
+        },
+        method: "POST",
+        success: function (data) {
+            console.log("성공");
+        },
+        error: function (request, status, error) {
+            console.log("에러");
+        },
+        complete: function () {
+            console.log("완료");
+        }
+    });
+});
+
+$(".upload_reply").click(function(e){ //e 는 이벤트
+    
+    let feed_id = e.target.attributes.getNamedItem('feed_id').value
+    let reply_id = 'reply_'+feed_id
+    
+    reply_content = $('#'+reply_id).val();
+
+    if(reply_content.length <=0 ){
+        alert("댓글을 입력하세요");
+        return;
+    }
+    $.ajax({
+        url: "/reply",
+        data: {
+            feed_id:feed_id,
+            reply_content : reply_content
+        },
+        method: "POST",
+        success: function (data) {
+            console.log("성공");
+            $("#reply_list_" + feed_id).append("<div style='margin: 0 20px;text-align: left;font-size: 14px'><b>{{ user.nickname }}</b> " + reply_content + "</div>")
+            {#location.replace('/main');#}
+        },
+        error: function (request, status, error) {
+            console.log("에러");
+        },
+        complete: function () {
+            console.log("완료");
+            //location.replace("/main"); 새로고침 없이 추가되는걸로 변경
+            $('#' + reply_id).val('');
+        }
+    });
+});
+
+$(".modal_close").click(function(){
+    $('#first_modal').css({
+        display:'none',
+    });     // ; 는 안써도 되지만 어쨌든 통일하기
+    // 클릭시 스크롤바 없애기 -> 최상위 태그인 body 태그를 가져와야함 
+    $('#second_modal').css({
+        display:'none',
+    });
+});
+
 let files;
 
 $('#nav_bar_add_box').click(function (){   // id 는 # 이고 class 는 . 으로 선택
@@ -333,37 +448,35 @@ $('#nav_bar_add_box').click(function (){   // id 는 # 이고 class 는 . 으로
     });
 });
 
-$('#feed_create_button').click(function (){
-    //alert("공유하기 클릭" +$('#input_feed_content').val());
+
+$('#feed_create_button').click(function () {
+    alert("공유 완료");
 
     let file = files[0];
     let image = files[0].name;
-    let content = $('#input_feed_content').val(); 
-    let user_id="dlawhks";
-    let profile_image="https://pbs.twimg.com/media/E9s0aFdVUAEHphb?format=jpg&name=large";
+    let content = $('#input_feed_content').val();
 
     let fd = new FormData();
-    fd.append('file',file);
-    fd.append('image',image);
-    fd.append('content',content);
-    fd.append('user_id',user_id);
-    fd.append('profile_image',profile_image);
+
+    fd.append('file', file);
+    fd.append('image', image);
+    fd.append('content', content);
 
     $.ajax({
         url: "/content/upload",
-        type: "POST", // 'method' 대신 'type'
         data: fd,
-        contentType: false, // FormData 사용 시 필요 기본으로 설정되어있다고는 하는데 안쓰면 오류남
-        processData: false, // FormData 사용 시 필요
+        method: "POST",
+        processData: false,
+        contentType: false,
         success: function (data) {
             console.log("성공");
         },
         error: function (request, status, error) {
-            console.log("에러: ", request, status, error);
+            console.log("에러");
         },
         complete: function () {
             console.log("완료");
-            location.replace("/main") // 완료 후 모달 닫기 또는 메인페이지로 다시 이동
+            location.replace("/main");
         }
     });
 });

@@ -78,7 +78,7 @@ class UploadProfile(APIView):
 
         profile_image = uuid_name
 
-        user = User.objects.filter(email=email).first()
+        user = User.objects.filter(email=email).first() # 업로드한 이미지를 보낼때 이멜도 같이 보내므로 그 이메일과 같은 이메일 사용자의 프로필 변경
 
         user.profile_image = profile_image
         user.save()

@@ -18,15 +18,17 @@ from django.contrib import admin
 from django.urls import path,include
 from .views import Main
 from content.views import Sub,UploadFeed
-from myinstagram.settings import MEDIA_ROOT,MEDIA_URL
+from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     #path('', Main.as_view()),
+    path('', RedirectView.as_view(url='/login', permanent=False)),
     path('main/',Sub.as_view()),
     # path('content/upload',UploadFeed.as_view())
     path('',include('content.urls')),
     path('',include('user.urls'))
 ]
 
-urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT) # media 에 이미지 파일을 올렸을때 해당 이미지를 조회할수 있게끔
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # media 에 이미지 파일을 올렸을때 해당 이미지를 조회할수 있게끔
